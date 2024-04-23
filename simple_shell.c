@@ -1,8 +1,8 @@
 #include "main.h"
 
 /**
- * main - its the shell
- * Return: it works
+ * main - is the shell
+ * Return: Success
  */
 
 #define MAX_TOKENS 64
@@ -67,7 +67,6 @@ void execute_command(char **tokens)
 	}
 	else
 	{
-
 		waitpid(pid, &status, 0);
 	}
 }
