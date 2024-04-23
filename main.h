@@ -11,5 +11,5 @@
 
 /* prototypes */
 
-void execute_command(char **args);
+void execute_command(char *input);
 #endif
