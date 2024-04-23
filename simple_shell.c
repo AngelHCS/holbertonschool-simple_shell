@@ -24,7 +24,7 @@ void execute_command(char *input)
         tokens[i++] = token;
         token = strtok(NULL, " \n");
     }
-    tokens[i] = NULL; // Null-terminate the array
+    tokens[i] = NULL;
 
     pidc = fork();
     if (pidc == -1)
