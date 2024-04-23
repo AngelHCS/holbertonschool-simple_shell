@@ -12,8 +12,7 @@ int main(void)
 {
 	char input[MAX_INPUT_LENGTH];
 	char *tokens[MAX_TOKENS];
-	struct stat sb;
-	pid_t pid;
+	struct stat;
 	char *token;
 	int token_count;
 
