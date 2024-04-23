@@ -14,7 +14,8 @@ int main(void)
 	char *tokens[MAX_TOKENS];
 	struct stat sb;
 	pid_t pid;
-	int status;
+	char *token;
+	int token_count;
 
 	while (1)
 	{
@@ -27,8 +28,8 @@ int main(void)
 			break;
 		}
 
-		char *token = strtok(input, " \n");
-		int token_count = 0;
+		token = strtok(input, " \n");
+		token_count = 0;
 
 		while (token != NULL && token_count < MAX_TOKENS - 1)
 		{
@@ -49,6 +50,7 @@ int main(void)
  */
 void execute_command(char **tokens)
 {
+	int status;
 	pid_t pid = fork();
 
 	if (pid < 0)
@@ -66,7 +68,6 @@ void execute_command(char **tokens)
 	}
 	else
 	{
-		int status;
 
 		waitpid(pid, &status, 0);
 	}
