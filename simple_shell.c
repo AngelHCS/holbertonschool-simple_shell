@@ -1,77 +1,99 @@
 #include "main.h"
 
+#define MAX_COMMAND_LENGTH 1024
+#define MAX_ARGUMENTS 64
+
+/**
+ * display_prompt - Display shell prompt
+ */
+
+void display_prompt(void)
+{
+	if (isatty(STDIN_FILENO))
+		printf("$ ");
+}
+
+/**
+ * read_command - Read command from user
+ * @command: Buffer to store the command
+ * @size: Size of the buffer
+ * Return: Number of characters read
+ */
+
+ssize_t read_command(char *command, size_t size)
+{
+	return (getline(&command, &size, stdin));
+}
+
 /**
  * execute_command - Execute command
- * @input: Input string containing the command and arguments
+ * @command: Command to execute
  */
-void execute_command(char *input)
+
+void execute_command(char *command)
 {
-    char **tokens = malloc(sizeof(char *) * 1024);
-    char *token;
-    int i = 0;
-    pid_t pidc;
-    int status;
+	char *args[MAX_ARGUMENTS];
+	int i = 0;
+	char *token;
+	pid_t pid;
 
-    if (tokens == NULL)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
+	token = strtok(command, " \n");
+	while (token != NULL && i < MAX_ARGUMENTS - 1)
+	{
+		args[i++] = token;
+		token = strtok(NULL, " \n");
+	}
+	args[i] = NULL;
+	pid = fork();
 
-    token = strtok(input, " \n");
-    while (token != NULL && i < 1023)
-    {
-        tokens[i++] = token;
-        token = strtok(NULL, " \n");
-    }
-    tokens[i] = NULL;
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		char *command_path = "/bin/";
 
-    pidc = fork();
-    if (pidc == -1)
-    {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-    else if (pidc == 0)
-    {
-        execvp(tokens[0], tokens);
-        perror("execvp");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        wait(&status);
-    }
+		strcat(command_path, args[0]);
 
-    free(tokens);
+		execve(command_path, args, NULL);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		wait(NULL);
+	}
 }
 
 /**
  * main - Main function of the shell
- * Return: 0 on success, 2 on exit
+ * Return: Always 0
  */
+
 int main(void)
 {
-    char *input = NULL;
-    size_t bufsize = 0;
-    ssize_t chars_read;
+	char command[MAX_COMMAND_LENGTH];
+	ssize_t chars_read;
 
-    while (1)
-    {
-        if (isatty(0) == 1)
-            printf("$ ");
-        chars_read = getline(&input, &bufsize, stdin);
-        if (chars_read == -1)
-        {
-            printf("\n");
-            break;
-        }
-        execute_command(input);
-        if (strcmp(input, "exit\n") == 0)
-            break;
-    }
+	while (1)
+	{
+		display_prompt();
+		chars_read = read_command(command, sizeof(command));
 
-    free(input);
-    return (0);
+		if (chars_read == -1)
+		{
+			printf("\n");
+			break;
+		}
+		command[strcspn(command, "\n")] = '\0';
+
+		if (strlen(command) > 0)
+		{
+			execute_command(command);
+		}
+	}
+
+	return (0);
 }
-

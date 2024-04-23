@@ -11,5 +11,8 @@
 
 /* prototypes */
 
-void execute_command(char *input);
+void execute_command(char *command);
+void display_prompt(void);
+ssize_t read_command(char *command, size_t size);
+
 #endif
