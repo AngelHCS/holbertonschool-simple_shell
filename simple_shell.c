@@ -2,57 +2,72 @@
 
 /**
  * main - its the shell
- * Return: Success
+ * Return: it works
  */
+
+#define MAX_TOKENS 64
+#define MAX_INPUT_LENGTH 1024
 
 int main(void)
 {
-	pid_t pidc;
-	char *token, *b = NULL;
-	size_t bufsize = 32;
-	char **av;
-	int status;
+	char input[MAX_INPUT_LENGTH];
+	char *tokens[MAX_TOKENS];
 	struct stat sb;
+	pid_t pid;
+	int status;
 
 	while (1)
 	{
-		if (isatty(0) == 1)
+		if (isatty(STDIN_FILENO))
 			printf("$ ");
-		if (getline(&b, &bufsize, stdin) == -1)
+
+		if (fgets(input, sizeof(input), stdin) == NULL)
 		{
 			printf("\n");
 			break;
 		}
-		token = strtok(b, " \n");
-		av = malloc(1024);
-		av[0] = token;
-		token = strtok(NULL, " \n");
-		av[1] = token;
-		token = strtok(NULL, " \n");
-		av[2] = token;
-		pidc = fork();
-		wait(&status);
-		if (pidc == 0)
+
+		char *token = strtok(input, " \n");
+		int token_count = 0;
+
+		while (token != NULL && token_count < MAX_TOKENS - 1)
 		{
-			if (stat(av[0], &sb) == 0)
-			{
-				execve(av[0], av, NULL);
-			}
-			else
-				break;
+			tokens[token_count++] = token;
+			token = strtok(NULL, " \n");
 		}
-		free(av);
-		if (pidc == -1)
+		tokens[token_count] = NULL;
+
+		if (token_count > 0)
+			execute_command(tokens);
+	}
+	return (0);
+}
+
+/**
+ * execute_command - Execute command
+ * @tokens: Array of command-line arguments
+ */
+void execute_command(char **tokens)
+{
+	pid_t pid = fork();
+
+	if (pid < 0)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if (execvp(tokens[0], tokens) == -1)
 		{
-			printf("Error de forkeo\n");
-		}
-		if (_strcmp(b, "exit") == 0)
-		{
-			free(b);
-			return (2);
+			perror("execvp");
+			exit(EXIT_FAILURE);
 		}
 	}
-	free(av);
-	free(b);
-	return (0);
+	else
+	{
+		int status;
+
+		waitpid(pid, &status, 0);
+	}
 }
