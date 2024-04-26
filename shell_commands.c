@@ -11,6 +11,7 @@
 int cmd_token(char *s, size_t __attribute__((unused)) file_stream, char *name)
 {
 	char *cmd_arr[100];
+	char *token;
 	int i = 0;
 
 	if (s == NULL)
@@ -22,7 +23,7 @@ int cmd_token(char *s, size_t __attribute__((unused)) file_stream, char *name)
 	if (strcmp(s, "env") == 0)
 	return (_printenv());
 
-	char *token = strtok(s, " ");
+	token = strtok(s, " ");
 
 	while (token != NULL && i < 100)
 	{

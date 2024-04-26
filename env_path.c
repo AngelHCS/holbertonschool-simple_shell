@@ -80,7 +80,7 @@ int _printenv(void)
 
 int _strncmp(char *s1, char *s2, int n)
 {
-	char k1, k2;
+	char c1, c2;
 
 	while (n--)
 	{
