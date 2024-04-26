@@ -1,53 +1,49 @@
 #include "main.h"
 
 /**
- * getpath - Reads the PATH and tokenizes it
+ * find_command_in_path - Reads the PATH and tokenizes it
  * @cmd: command passed from getline in main
  * Return: new_path for use in cmd_read
  */
 
-char *getpath(char *cmd)
-{
-	char *path = strdup(_getenv("PATH"));
-	int i = 0, j = 0;
-	char *path_tokens = strtok(path, ":");
-	char *path_array[100];
-	char *s2 = cmd;
-	char *new_path = NULL;
-	struct stat buf;
+char *find_command_in_path(const char *cmd) {
+    char *path = getenv("PATH");
+    char *path_token;
+    char *path_array[100];
+    char *new_path;
+    struct stat buf;
+    int i = 0, j;
 
-	new_path = malloc(sizeof(char) * 1000);
-	if (_getenv("PATH")[0] == ':')
-		if (stat(cmd, &buf) == 0)
-			return (strdup(cmd));
+    if (!path || *path == '\0') {
+        fprintf(stderr, "PATH environment variable is empty.\n");
+        return NULL;
+    }
 
-	while (path_tokens != NULL)
-	{
-		path_array[i++] = path_tokens;
-		path_tokens = strtok(NULL, ":");
-	}
-	path_array[i] = NULL;
+    path_token = strtok(path, ":");
+    while (path_token != NULL && i < 99) {
+        path_array[i++] = path_token;
+        path_token = strtok(NULL, ":");
+    }
+    path_array[i] = NULL;
 
-	for (j = 0; path_array[j]; j++)
-	{
-		strcpy(new_path, path_array[j]);
-		strcat(new_path, "/");
-		strcat(new_path, s2);
+    new_path = (char *)malloc(strlen(cmd) + 1);
+    if (!new_path) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        return NULL;
+    }
 
-		if (stat(new_path, &buf) == 0)
-		{
-			free(path);
-			return (new_path);
-		}
+    for (j = 0; path_array[j] != NULL; j++) {
+        strcpy(new_path, path_array[j]);
+        strcat(new_path, "/");
+        strcat(new_path, cmd);
 
-		else
-			new_path[0] = 0;
-	}
-	free(path);
-	free(new_path);
-	if (stat(cmd, &buf) == 0)
-		return (strdup(cmd));
-	return (NULL);
+        if (stat(new_path, &buf) == 0 && S_ISREG(buf.st_mode)) {
+            return new_path;
+        }
+    }
+
+    free(new_path);
+    return NULL;
 }
 
 /**

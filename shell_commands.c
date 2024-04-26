@@ -86,7 +86,8 @@ int cmd_call(char *cmd_arr[], char *name)
 		}
 	}
 
-	exe_path_str = getpath(cmd);
+	exe_path_str = find_command_in_path(cmd);
+
 	if (exe_path_str == NULL)
 	{
 		cmd_err(cmd, name);

@@ -14,7 +14,7 @@
 #define PROMPT "$ "
 
 int cmd_token(char *s, size_t __attribute__((unused)) file_stream, char *name);
-char *getpath(char *cmd);
+char *find_command_in_path(const char *cmd);
 void cmd_err(char *cmd, char *name);
 int cmd_call(char *cmd_arr[], char *name);
 int _str_n_cmp(char *s1, char *s2, int n);
