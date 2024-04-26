@@ -1,0 +1,89 @@
+Simple Shell man page.
+.TH man 1
+
+.TH "Simple Shell" 1 "26 April 2024" "1.0" 
+
+.SH NAME
+hsh - Shell's Bells - Simple Shell
+
+.SH SYNOPSIS
+hsh -the prototype of our main function is as follows: int main(int argc __attribute__((unused)), char **argv, char **env);
+            
+The header file is called holberton.h where all the prototypes, structures and libraries used in our shell are referenced.
+
+.SH DESCRIPTION
+Welcome to the Suárez-Carrasquillo-Rodríguez Simple Shell Project this shell can be compiled and run from the command line, it includes basic features, as well as some advanced features found in most shell programs.
+
+.SH OVERVIEW
+The Suárez-Carrasquillo-Rodríguez Simple Shell project is a team project done by Thais Rodríguez, Ángel Carrasquillo and Ángel Suárez, students at Holberton School San Juan Puerto Rico, for educational purposes. It's main purpose is to develop our own clone of a shell version based on the ones found in Ubuntu Linux distributions. The main goal for us was to learn, develop, deploy and work collaboratively on our own Shell.
+
+.SH RETURN VALUE
+The shell returns the error code given by the last run command, also either ctrl-d or exit, by default the main function returns 0.
+
+.SH SYNTAX
+†Shell's Bells† <command> <flags>
+.SS
+OR NON-INTERACTIVE MODE:
+$ echo "<command>" | ./hsh
+
+.SS Interactive mode:
+
+
+.SS
+EXAMPLES:
+.SS
+ls command:
+†Simple Shell† ls -1
+.SS
+pwd command:
+†Simple Shell† pwd
+.SS
+cd command:
+†Simple Shell† cd ..
+.SS
+help command:
+†Simple Shell† help <builtin command>
+.SS
+# comments
+†Simple Shell† echo Hello # World
+Hello
+
+.SH BUILTIN COMMANDS
+Our Shell supports a variety of builtin commands:
+
+.SS exit
+- exits the Shell
+
+.SS env
+- prints the environment variables.
+
+.SS setenv
+- sets an environment variable.
+
+.SS unsetenv
+- unsets an environment variable.
+
+.SS cd
+- changes directory.
+
+.SS help
+- displays help for builtin commands.
+
+.SS Bonus
+
+.SS welcome
+- displays a welcome message
+.SS bart
+- shows Bart Simpson 
+
+.SH SEE ALSO
+BASH(1)
+
+.SH BUGS
+No known bugs
+
+Authors:
+
+Ángel Suárez
+Ángel Carrasquillo
+Thais Rodríguez
