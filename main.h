@@ -1,21 +1,26 @@
 #ifndef MAIN_H
 #define MAIN_H
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 
+#define MAX_INPUT_SIZE 1024
+#define MAX_CMD_SIZE 1024
+#define DELIM " \t\r\n\a"
+#define PROMPT "$ "
 
-/* prototypes */
+int cmd_token(char *s, size_t __attribute__((unused)) file_stream, char *name);
+char *getpath(char *cmd);
+void cmd_err(char *cmd, char *name);
+int cmd_call(char *cmd_arr[], char *name);
+int _str_n_cmp(char *s1, char *s2, int n);
+extern char **environ;
+int _printenv(void);
+char *_getenv(char *var);
+int exe_cmd(char *cmd_arr[], char *name);
 
-void execute_command(char *command);
-void display_prompt(void);
-ssize_t read_command(char *command, size_t size);
-void tokenize_command(char *command, char *args[]);
-void construct_command_path(char *command, char *command_path);
-
-
-#endif
+#endif /* MAIN_H */
